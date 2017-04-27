@@ -26,7 +26,7 @@ import java.util.Random;
  * for an example usage.
  * */
 public class TensorFlowInferenceInterface {
-  private static final String TAG = "TensorFlowInferenceInterface";
+  private static final String TAG = TensorFlowInferenceInterface.class.getSimpleName();
 
   /**
    * A unique identifier used to associate the Java TensorFlowInferenceInterface
@@ -96,11 +96,14 @@ public class TensorFlowInferenceInterface {
   public native void fillNodeInt(String inputName, int[] dims, int[] values);
   public native void fillNodeDouble(String inputName, int[] dims, double[] values);
   public native void fillNodeByte(String inputName, int[] dims, byte[] values);
+  public native void fillNodeBoolean(String inputName, int[] dims, boolean[] values);
+  public native void fillScalarNodeBoolean(String inputName, boolean val);
 
   public native void readNodeFloat(String outputName, float[] values);
   public native void readNodeInt(String outputName, int[] values);
   public native void readNodeDouble(String outputName, double[] values);
   public native void readNodeByte(String outputName, byte[] values);
+  public native void readNodeBoolean(String outputName, boolean[] values);
 
   /**
    * Canary method solely for determining if the tensorflow_inference native library should be

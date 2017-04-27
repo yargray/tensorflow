@@ -35,6 +35,10 @@ extern "C" {
       JNIEnv * env, jobject thiz, jstring node_name, jintArray dims, \
       j##JAVA_DTYPE##Array arr)
 
+#define FILL_SCALAR_NODE_SIGNATURE(DTYPE, JAVA_DTYPE)                \
+  JNIEXPORT void TENSORFLOW_METHOD(fillScalarNode##DTYPE)(           \
+      JNIEnv * env, jobject thiz, jstring node_name, j##JAVA_DTYPE val)
+
 #define READ_NODE_SIGNATURE(DTYPE, JAVA_DTYPE)               \
   JNIEXPORT jint TENSORFLOW_METHOD(readNode##DTYPE)(         \
       JNIEnv * env, jobject thiz, jstring node_name_jstring, \
@@ -60,11 +64,14 @@ FILL_NODE_SIGNATURE(Float, float);
 FILL_NODE_SIGNATURE(Int, int);
 FILL_NODE_SIGNATURE(Double, double);
 FILL_NODE_SIGNATURE(Byte, byte);
+FILL_NODE_SIGNATURE(Boolean, boolean);
+FILL_SCALAR_NODE_SIGNATURE(Boolean, boolean);
 
 READ_NODE_SIGNATURE(Float, float);
 READ_NODE_SIGNATURE(Int, int);
 READ_NODE_SIGNATURE(Double, double);
 READ_NODE_SIGNATURE(Byte, byte);
+READ_NODE_SIGNATURE(Boolean, boolean);
 
 #ifdef __cplusplus
 }  // extern "C"

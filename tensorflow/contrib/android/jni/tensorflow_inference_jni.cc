@@ -271,6 +271,19 @@ JNIEXPORT jint JNICALL TENSORFLOW_METHOD(close)(JNIEnv* env, jobject thiz) {
   return s.code();
 }
 
+#define FILL_SCALAR_NODE_METHOD(DTYPE, JAVA_DTYPE, CTYPE, TENSOR_DTYPE)    \
+  FILL_SCALAR_NODE_SIGNATURE(DTYPE, JAVA_DTYPE) {                          \
+    SessionVariables* vars = GetSessionVars(env, thiz);                    \
+    tensorflow::TensorShape shape;                                         \
+    tensorflow::Tensor input_tensor(TENSOR_DTYPE, shape);                  \
+    input_tensor.scalar<CTYPE>()() = val;                                  \
+    std::string input_name = GetString(env, node_name);                    \
+    std::pair<std::string, tensorflow::Tensor> input_pair(input_name,      \
+                                                          input_tensor);   \
+    vars->input_tensors[input_name] = input_pair;                          \
+  }
+
+
 // TODO(andrewharp): Use memcpy to fill/read nodes.
 #define FILL_NODE_METHOD(DTYPE, JAVA_DTYPE, CTYPE, TENSOR_DTYPE)           \
   FILL_NODE_SIGNATURE(DTYPE, JAVA_DTYPE) {                                 \
@@ -324,8 +337,11 @@ FILL_NODE_METHOD(Float, float, float, tensorflow::DT_FLOAT)
 FILL_NODE_METHOD(Int, int, int, tensorflow::DT_INT32)
 FILL_NODE_METHOD(Double, double, double, tensorflow::DT_DOUBLE)
 FILL_NODE_METHOD(Byte, byte, uint8_t, tensorflow::DT_UINT8)
+FILL_NODE_METHOD(Boolean, boolean, bool, tensorflow::DT_BOOL)
+FILL_SCALAR_NODE_METHOD(Boolean, boolean, bool, tensorflow::DT_BOOL)
 
 READ_NODE_METHOD(Float, float, float)
 READ_NODE_METHOD(Int, int, int)
 READ_NODE_METHOD(Double, double, double)
 READ_NODE_METHOD(Byte, byte, uint8_t)
+READ_NODE_METHOD(Boolean, boolean, bool)
